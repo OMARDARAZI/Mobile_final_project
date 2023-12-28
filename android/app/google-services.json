@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "66955648953",
+    "project_id": "contaction-44c5a",
+    "storage_bucket": "contaction-44c5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66955648953:android:46f6feb0fd46af9abe6068",
+        "android_client_info": {
+          "package_name": "com.example.finale_proj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuql_g2HSZzk09O_8IUmsfmkCTTTC4TtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
