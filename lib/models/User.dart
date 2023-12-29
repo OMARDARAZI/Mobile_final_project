@@ -16,6 +16,8 @@ class Users {
       'email': email,
       'password': password,
       'pfp': pfp,
+      'bio':'',
+      'isPublic':true,
       'isOnline': true,
       'suggestAccount': true
     };

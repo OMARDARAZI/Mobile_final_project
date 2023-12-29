@@ -277,7 +277,7 @@ class ProfilePage extends StatelessWidget {
                             stream: firestore
                                 .collection('users')
                                 .doc(auth.currentUser!.uid)
-                                .collection('followers')
+                                .collection('Followers')
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -328,7 +328,7 @@ class ProfilePage extends StatelessWidget {
                             stream: firestore
                                 .collection('users')
                                 .doc(auth.currentUser!.uid)
-                                .collection('following')
+                                .collection('Following')
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
