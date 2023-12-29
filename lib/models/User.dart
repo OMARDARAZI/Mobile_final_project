@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Users {
   String name;
   String email;
@@ -19,7 +21,8 @@ class Users {
       'bio':'',
       'isPublic':true,
       'isOnline': true,
-      'suggestAccount': true
+      'suggestAccount': true,
+      'lastNameChangeTimestamp': FieldValue.serverTimestamp(),
     };
   }
 }

@@ -31,12 +31,14 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Theme.of(context).backgroundColor,
       body: Center(
         child: StreamBuilder(
-          stream: logic.firestore.collection('users').snapshots(),
+          stream: logic.firestore
+              .collection('users')
+              .where('suggestAccount', isEqualTo: true)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return CardSwiper(
                 onSwipe: (previousIndex, currentIndex, direction) {
-
                   return true;
                 },
                 controller: cardController,
@@ -64,13 +66,31 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  MediaQuery.sizeOf(context).width * 2),
-                              child: Image.network(
-                                  snapshot.data!.docs[index].get('pfp'),
-                                  width:
-                                      MediaQuery.sizeOf(context).width * .45),
+                            Stack(
+                              children: [
+                                Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        MediaQuery.sizeOf(context).width * 2),
+                                    child: MyImageWidget(
+                                      hieght: 150,
+                                      width: 150,
+                                      imageUrl:
+                                          snapshot.data!.docs[index].get('pfp'),
+                                    ),
+                                  ),
+                                ),
+                                snapshot.data!.docs[index].get('isOnline')
+                                    ? const Positioned(
+                                        top: 0,
+                                        right: 90,
+                                        child: Icon(
+                                          Icons.circle,
+                                          size: 35,
+                                          color: Colors.green,
+                                        ))
+                                    : Container(),
+                              ],
                             ),
                             const SizedBox(
                               height: 20,
@@ -101,7 +121,6 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    print(snapshot.data!.docs[index].id);
                                     Get.to(
                                       () => ScanedProfilePage(
                                         id: snapshot.data!.docs[index].id,
@@ -119,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                                       child: Text(
                                         'View Profile',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),

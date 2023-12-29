@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finale_proj/widgets/FollowBtn.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/controllers/flip_card_controllers.dart';
@@ -17,6 +16,7 @@ import '../add_account/logic.dart';
 import '../add_account/view.dart';
 import '../edit_bio/view.dart';
 import '../settings/view.dart';
+import '../widgets/imageLoading.dart';
 import '../widgets/itemCard.dart';
 import '../widgets/loading.dart';
 import '../widgets/shimmer_effect.dart';
@@ -60,6 +60,18 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                   return Scaffold(
                     appBar: AppBar(
                       elevation: 0,
+                      leading: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
+                        child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.black,
+                            )),
+                      ),
                       backgroundColor: Colors.transparent,
                       centerTitle: true,
                       title: Text(
@@ -70,9 +82,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                             color: Colors.black),
                       ),
                     ),
-                    backgroundColor: Theme
-                        .of(context)
-                        .backgroundColor,
+                    backgroundColor: Theme.of(context).backgroundColor,
                     body: ListView(
                       physics: const RangeMaintainingScrollPhysics(),
                       children: [
@@ -105,25 +115,26 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                             .snapshots(),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
-                                            var data = snapshot.data!
-                                                .data(); // Get the document data as a map
+                                            var data = snapshot.data!.data();
                                             if (data != null &&
                                                 data.containsKey('pfp')) {
                                               return ClipRRect(
                                                 borderRadius:
-                                                BorderRadius.circular(10),
+                                                    BorderRadius.circular(10),
                                                 child: Container(
                                                   width: 30.w,
                                                   height: 30.w,
-                                                  child: Image.network(
-                                                    data['pfp'],
+                                                  child: MyImageWidget(
+                                                    width: 2,
+                                                    hieght: 2,
+                                                    imageUrl: data['pfp'],
                                                   ),
                                                 ),
                                               );
                                             } else {
                                               return ClipRRect(
                                                 borderRadius:
-                                                BorderRadius.circular(10),
+                                                    BorderRadius.circular(10),
                                                 child: Container(
                                                   width: 30.w,
                                                   height: 30.w,
@@ -178,9 +189,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                   width: 48.w,
                                   height: 30.h,
                                   decoration: BoxDecoration(
-                                      color: Theme
-                                          .of(context)
-                                          .primaryColor,
+                                      color: Theme.of(context).primaryColor,
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Column(
                                     children: [
@@ -250,13 +259,11 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                       GestureDetector(
                                         child: SizedBox(
                                           width:
-                                          MediaQuery
-                                              .sizeOf(context)
-                                              .width *
-                                              0.8,
+                                              MediaQuery.sizeOf(context).width *
+                                                  0.8,
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 snapshot.data!.get('bio'),
@@ -283,11 +290,11 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                               color: Colors.transparent,
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 50),
+                                    const EdgeInsets.symmetric(horizontal: 50),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     /**Followers*/
                                     StreamBuilder(
@@ -305,7 +312,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 18.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 7,
@@ -315,7 +322,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 12.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               )
                                             ],
                                           );
@@ -327,7 +334,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 18.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 7,
@@ -337,7 +344,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 12.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               )
                                             ],
                                           );
@@ -360,7 +367,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 18.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 7,
@@ -370,7 +377,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 12.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               )
                                             ],
                                           );
@@ -415,7 +422,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 18.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 7,
@@ -425,7 +432,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 12.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                             ],
                                           );
@@ -437,7 +444,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 18.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 7,
@@ -447,7 +454,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                 style: TextStyle(
                                                     fontSize: 12.sp,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                             ],
                                           );
@@ -459,108 +466,207 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                               ),
                             ),
                             SizedBox(height: 2.5.h),
-
-
                             GestureDetector(
                               onTap: () async {
                                 print(logic.followStatus);
 
-                                  if (logic.followStatus == 'Follow') {
-                                    logic.followTapped(snapshot.data!.id);
-                                  } else if (logic.followStatus ==
-                                      'Requested') {
-                                    await logic
-                                        .deleteRequest(snapshot.data!.id);
-                                  }
-                                  else if(logic.followStatus=='Following'){
-                                    logic.unFollow(snapshot.data!.id);
-                                  }
+                                if (logic.followStatus == 'Follow') {
+                                  logic.followTapped(snapshot.data!.id);
+                                } else if (logic.followStatus == 'Requested') {
+                                  await logic.deleteRequest(snapshot.data!.id);
+                                } else if (logic.followStatus == 'Following') {
+                                  logic.unFollow(snapshot.data!.id);
+                                }
 
                                 logic.checkFollowStatus(snapshot.data!.id);
                               },
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width * 0.8,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(7)),
-                                child: Center(
-                                  child: Text(
-                                    logic.followStatus,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                              child: widget.id == auth.currentUser!.uid
+                                  ? Container()
+                                  : Container(
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.8,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(7)),
+                                      child: Center(
+                                        child: Text(
+                                          logic.followStatus,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ),
                             SizedBox(height: 2.5.h),
-                            Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(50),
-                                  topLeft: Radius.circular(50),
-                                ),
-                              ),
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width,
-                              child: StreamBuilder(
+                            StreamBuilder(
                                 stream: firestore
                                     .collection('users')
                                     .doc(widget.id)
-                                    .collection('accounts')
+                                    .collection('Followers')
                                     .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return GridView.builder(
-                                      physics:
-                                      const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data!.docs.length,
-                                      gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
+                                builder: (context, Fsnapshot) {
+                                  return Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(50),
+                                        topLeft: Radius.circular(50),
                                       ),
-                                      itemBuilder: (context, index) {
-                                        return ItemCard(
-                                          onTap: () async {
-                                            String externalLink = snapshot
-                                                .data!.docs[index]
-                                                .get('link');
-                                            try {
-                                              await launchUrl(
-                                                  Uri.parse(externalLink));
-                                            } catch (e) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  showCloseIcon: true,
-                                                  closeIconColor: Colors.white,
-                                                  content: Text(
-                                                      'Error launching URL'),
-                                                  duration:
-                                                  Duration(seconds: 3),
+                                    ),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: StreamBuilder(
+                                      stream: firestore
+                                          .collection('users')
+                                          .doc(widget.id)
+                                          .collection('accounts')
+                                          .snapshots(),
+                                      builder: (context, Accountsnapshot) {
+                                        if (Accountsnapshot.hasData) {
+                                          if (snapshot.data!.get('isPublic') ==
+                                                  false &&
+                                              !Fsnapshot.data!.docs.contains(
+                                                  auth.currentUser!.uid)) {
+                                            return Container(
+                                              width: MediaQuery.sizeOf(context)
+                                                  .width,
+                                              height: 70.h,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(50),
+                                                  topRight: Radius.circular(50),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 50,
+                                                  ),
+                                                  Image.asset(
+                                                      'assets/images/lock.png',width: 250,),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Text(
+                                                    'Private Account',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                        fontSize: 20.sp),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    'Follow to see his accounts.',
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 15.sp),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            if (Accountsnapshot
+                                                    .data!.docs.length >
+                                                0) {
+                                              return GridView.builder(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: Accountsnapshot
+                                                    .data!.docs.length,
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2,
+                                                ),
+                                                itemBuilder: (context, index) {
+                                                  return ItemCard(
+                                                    onTap: () async {
+                                                      String externalLink =
+                                                          Accountsnapshot
+                                                              .data!.docs[index]
+                                                              .get('link');
+                                                      try {
+                                                        await launchUrl(
+                                                            Uri.parse(
+                                                                externalLink));
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            showCloseIcon: true,
+                                                            closeIconColor:
+                                                                Colors.white,
+                                                            content: Text(
+                                                                'Error launching URL'),
+                                                            duration: Duration(
+                                                                seconds: 3),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                    name: Accountsnapshot
+                                                        .data!.docs[index]
+                                                        .get('name'),
+                                                    image: Accountsnapshot
+                                                        .data!.docs[index]
+                                                        .get('image'),
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              return Container(
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                        .width,
+                                                height: 70.h,
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(50),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    50))),
+                                                child: Column(
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 50,
+                                                    ),
+                                                    Opacity(
+                                                      opacity: .5,
+                                                      child: Image.asset(
+                                                          'assets/images/noData.jpg',
+                                                          width: 250),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 30,
+                                                    ),
+                                                    Text(
+                                                      'No Accounts Found!',
+                                                      style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
                                                 ),
                                               );
                                             }
-                                          },
-                                          name: snapshot.data!.docs[index]
-                                              .get('name'),
-                                          image: snapshot.data!.docs[index]
-                                              .get('image'),
-                                        );
+                                          }
+                                        } else {
+                                          return const Loading();
+                                        }
                                       },
-                                    );
-                                  } else {
-                                    return const Loading();
-                                  }
-                                },
-                              ),
-                            )
+                                    ),
+                                  );
+                                })
                           ],
                         )
                       ],
@@ -585,9 +691,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                               )),
                         ),
                       ),
-                      backgroundColor: Theme
-                          .of(context)
-                          .backgroundColor,
+                      backgroundColor: Theme.of(context).backgroundColor,
                       body: Center(
                         child: ListView(
                           shrinkWrap: true,
@@ -625,14 +729,13 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
     );
   }
 
-  Widget _buildButton({required IconData icon,
-    required String text,
-    required VoidCallback onTap,
-    required BuildContext context}) {
+  Widget _buildButton(
+      {required IconData icon,
+      required String text,
+      required VoidCallback onTap,
+      required BuildContext context}) {
     return Container(
-      width: MediaQuery
-          .sizeOf(context)
-          .width * .8,
+      width: MediaQuery.sizeOf(context).width * .8,
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
@@ -656,6 +759,4 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
       ),
     );
   }
-
-
 }

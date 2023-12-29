@@ -1,38 +1,27 @@
-import 'dart:ui';
-
+import 'package:finale_proj/widgets/shimmer_effect.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class BlurredImage extends StatefulWidget {
+class MyImageWidget extends StatelessWidget {
   final String imageUrl;
+  double width;
+  double hieght;
 
-  BlurredImage({required this.imageUrl});
-
-  @override
-  _BlurredImageState createState() => _BlurredImageState();
-}
-
-class _BlurredImageState extends State<BlurredImage> {
-  late bool _loading;
-
-  @override
-  void initState() {
-    super.initState();
-    _loading = true;
-  }
+  MyImageWidget({
+    required this.imageUrl,
+    required this.width,
+    required this.hieght
+  });
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget.imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-              colorFilter: const ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
-        ),
-      ),
+      imageUrl: imageUrl,
+      width: width,
+      height: hieght,
+      placeholder: (context, url) => ShimmerContainer(width: 200, height: 200),
+      errorWidget: (context, url, error) => Icon(Icons.error),
+      fit: BoxFit.cover,
     );
   }
 }

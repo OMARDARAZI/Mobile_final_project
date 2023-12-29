@@ -40,6 +40,7 @@ dependencies:
   firebase_core:
   firebase_auth:
   cloud_firestore:
+  firebase_storage:
   iconsax:
   lottie:
   quickalert:
@@ -54,6 +55,8 @@ dependencies:
   cached_network_image: ^3.2.0
   shimmer:
   simple_logger: ^1.9.0+3
+  image_picker:
+  bcrypt:
 
 dev_dependencies:
   flutter_test:

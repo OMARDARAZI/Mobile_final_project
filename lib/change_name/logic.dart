@@ -29,20 +29,20 @@ class ChangeNameLogic extends GetxController {
 
         DateTime currentTimestamp = DateTime.now();
 
-        if (lastChangeTimestamp == null ||
-            currentTimestamp.difference(lastChangeTimestamp.toDate()).inDays >=
+        if (currentTimestamp.difference(lastChangeTimestamp.toDate()).inDays >=
                 30) {
-          await userDocRef.set(
+          await userDocRef.update(
             {
               'name': newName,
               'lastNameChangeTimestamp': FieldValue.serverTimestamp(),
             },
-            SetOptions(merge: true), // Merge with existing data
           );
 
           isLoading = false;
           update();
-        } else {
+        }
+
+        else {
           isLoading = false;
           update();
           showError(context);
@@ -77,6 +77,7 @@ class ChangeNameLogic extends GetxController {
       borderRadius: 5,
       barrierDismissible: false,
       lottieAsset: 'assets/lottie/error.json',
+
       onConfirmBtnTap: () {
         Navigator.pop(context);
       },

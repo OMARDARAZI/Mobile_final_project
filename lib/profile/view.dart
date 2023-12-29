@@ -5,7 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finale_proj/add_account/logic.dart';
 import 'package:finale_proj/add_account/view.dart';
 import 'package:finale_proj/edit_bio/view.dart';
+import 'package:finale_proj/requests/view.dart';
 import 'package:finale_proj/settings/view.dart';
+import 'package:finale_proj/widgets/imageLoading.dart';
 import 'package:finale_proj/widgets/itemCard.dart';
 import 'package:finale_proj/widgets/loading.dart';
 import 'package:finale_proj/widgets/shimmer_effect.dart';
@@ -38,17 +40,71 @@ class ProfilePage extends StatelessWidget {
             elevation: 0,
             backgroundColor: Colors.transparent,
             centerTitle: true,
+            leading: Tooltip(
+              message: 'Follow Requests',
+              child: Stack(
+                children: [
+                  Center(
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(() => RequestsPage(),
+                            transition: Transition.rightToLeft);
+                      },
+                      icon: const Icon(
+                        Iconsax.user_add,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  StreamBuilder(
+                      stream: firestore
+                          .collection('users')
+                          .doc(auth.currentUser!.uid)
+                          .collection('requests')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData &&
+                            snapshot.data!.docs.length > 0) {
+                          return Positioned(
+                            right: 5,
+                            top: 5,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.red,
+                              ),
+                              child: Text(
+                                '${snapshot.data!.docs.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }),
+                ],
+              ),
+            ),
             actions: [
-              IconButton(
-                  onPressed: () {
-                    Get.to(() => SettingsPage(),
-                        transition: Transition.rightToLeft,
-                        curve: Curves.easeInBack);
-                  },
-                  icon: const Icon(
-                    Iconsax.setting,
-                    color: Colors.black,
-                  )),
+              Tooltip(
+                message: 'Settings',
+                child: IconButton(
+                    onPressed: () {
+                      Get.to(() => SettingsPage(),
+                          transition: Transition.rightToLeft,
+                          curve: Curves.easeInBack);
+                    },
+                    icon: const Icon(
+                      Iconsax.setting,
+                      color: Colors.black,
+                    )),
+              ),
             ],
             title: Text(
               'Profile',
@@ -92,15 +148,17 @@ class ProfilePage extends StatelessWidget {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   var data = snapshot.data!
-                                      .data(); // Get the document data as a map
+                                      .data();
                                   if (data != null && data.containsKey('pfp')) {
                                     return ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: Container(
                                         width: 30.w,
                                         height: 30.w,
-                                        child: Image.network(
-                                          data['pfp'],
+                                        child: MyImageWidget(
+                                          width: 2,
+                                          hieght: 2,
+                                          imageUrl: data['pfp'],
                                         ),
                                       ),
                                     );
@@ -281,24 +339,27 @@ class ProfilePage extends StatelessWidget {
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                return Column(
-                                  children: [
-                                    Text(
-                                      '${snapshot.data!.docs.length}',
-                                      style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(
-                                      height: 7,
-                                    ),
-                                    Text(
-                                      'Followers',
-                                      style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '${snapshot.data!.docs.length}',
+                                        style: TextStyle(
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 7,
+                                      ),
+                                      Text(
+                                        'Followers',
+                                        style: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
                                 );
                               } else {
                                 return Column(
@@ -488,116 +549,145 @@ class ProfilePage extends StatelessWidget {
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          return GridView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemBuilder: (context, index) {
-                              return ItemCard(
-                                onLongPress: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        color: Colors.transparent,
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                              sigmaX: 10, sigmaY: 10),
-                                          child: Container(
-                                            padding: const EdgeInsets.all(16.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200]
-                                                  ?.withOpacity(0.7),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                topLeft: Radius.circular(15.0),
-                                                topRight: Radius.circular(15.0),
+                          if (snapshot.data!.docs.length > 0) {
+                            return GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.docs.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemBuilder: (context, index) {
+                                return ItemCard(
+                                  onLongPress: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          color: Colors.transparent,
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 10, sigmaY: 10),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200]
+                                                    ?.withOpacity(0.7),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topLeft:
+                                                      Radius.circular(15.0),
+                                                  topRight:
+                                                      Radius.circular(15.0),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  GetBuilder<AddAccountLogic>(
+                                                      init: AddAccountLogic(),
+                                                      builder: (logic) {
+                                                        return _buildButton(
+                                                          context: context,
+                                                          icon: Icons.edit,
+                                                          text: 'Edit',
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+
+                                                            logic.editAccount(
+                                                              image: snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                                  .get('image'),
+                                                              name: snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                                  .get('name'),
+                                                            );
+
+                                                            Get.to(() =>
+                                                                AddAccountPage());
+                                                          },
+                                                        );
+                                                      }),
+                                                  const SizedBox(height: 16.0),
+                                                  _buildButton(
+                                                    context: context,
+                                                    icon: Icons.delete,
+                                                    text: 'Delete',
+                                                    onTap: () async {
+                                                      DocumentSnapshot
+                                                          documentToDelete =
+                                                          snapshot.data!
+                                                              .docs[index];
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection('users')
+                                                          .doc(auth
+                                                              .currentUser!.uid)
+                                                          .collection(
+                                                              'accounts')
+                                                          .doc(documentToDelete
+                                                              .id)
+                                                          .delete();
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                GetBuilder<AddAccountLogic>(
-                                                    init: AddAccountLogic(),
-                                                    builder: (logic) {
-                                                      return _buildButton(
-                                                        context: context,
-                                                        icon: Icons.edit,
-                                                        text: 'Edit',
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-
-                                                          logic.editAccount(
-                                                            image: snapshot
-                                                                .data!
-                                                                .docs[index]
-                                                                .get('image'),
-                                                            name: snapshot.data!
-                                                                .docs[index]
-                                                                .get('name'),
-                                                          );
-
-                                                          Get.to(() =>
-                                                              AddAccountPage());
-                                                        },
-                                                      );
-                                                    }),
-                                                const SizedBox(height: 16.0),
-                                                _buildButton(
-                                                  context: context,
-                                                  icon: Icons.delete,
-                                                  text: 'Delete',
-                                                  onTap: () async {
-                                                    DocumentSnapshot
-                                                        documentToDelete =
-                                                        snapshot
-                                                            .data!.docs[index];
-                                                    await FirebaseFirestore
-                                                        .instance
-                                                        .collection('users')
-                                                        .doc(auth
-                                                            .currentUser!.uid)
-                                                        .collection('accounts')
-                                                        .doc(
-                                                            documentToDelete.id)
-                                                        .delete();
-                                                    Navigator.pop(context);
-                                                  },
-                                                ),
-                                              ],
-                                            ),
                                           ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  onTap: () async {
+                                    String externalLink =
+                                        snapshot.data!.docs[index].get('link');
+                                    try {
+                                      await launchUrl(Uri.parse(externalLink));
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          showCloseIcon: true,
+                                          closeIconColor: Colors.white,
+                                          content: Text('Error launching URL'),
+                                          duration: Duration(seconds: 3),
                                         ),
                                       );
-                                    },
-                                  );
-                                },
-                                onTap: () async {
-                                  String externalLink =
-                                      snapshot.data!.docs[index].get('link');
-                                  try {
-                                    await launchUrl(Uri.parse(externalLink));
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        showCloseIcon: true,
-                                        closeIconColor: Colors.white,
-                                        content: Text('Error launching URL'),
-                                        duration: Duration(seconds: 3),
-                                      ),
-                                    );
-                                  }
-                                },
-                                name: snapshot.data!.docs[index].get('name'),
-                                image: snapshot.data!.docs[index].get('image'),
-                              );
-                            },
-                          );
+                                    }
+                                  },
+                                  name: snapshot.data!.docs[index].get('name'),
+                                  image:
+                                      snapshot.data!.docs[index].get('image'),
+                                );
+                              },
+                            );
+                          } else {
+                            return Container(
+                              width: MediaQuery.sizeOf(context).width,
+                              height: 70.h,
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Text('No Accounts Found!',style: TextStyle(fontSize: 20.sp),),
+
+                                  Opacity(
+                                    opacity: .5,
+                                    child:
+                                        Image.asset('assets/images/noData.jpg'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         } else {
                           return const Loading();
                         }

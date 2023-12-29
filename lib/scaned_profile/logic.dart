@@ -127,12 +127,11 @@ class ScanedProfileLogic extends GetxController {
         .doc(currentUser.uid)
         .get();
 
-    bool isPublic = userSnapshot.get('isPublic');
 
     await FirebaseFirestore.instance
         .collection("users")
         .doc(currentUser.uid)
-        .collection('Following')
+        .collection('Followers')
         .doc(id)
         .set({
       'timestamp': FieldValue.serverTimestamp(),
@@ -141,7 +140,7 @@ class ScanedProfileLogic extends GetxController {
     await FirebaseFirestore.instance
         .collection("users")
         .doc(id)
-        .collection('Followers')
+        .collection('Following')
         .doc(currentUser.uid)
         .set({
       'timestamp': FieldValue.serverTimestamp(),
@@ -197,7 +196,7 @@ class ScanedProfileLogic extends GetxController {
           'timestamp': FieldValue.serverTimestamp(),
         });
         followStatus = 'Requested';
-        update();
+
         update();
       }
     } catch (e) {

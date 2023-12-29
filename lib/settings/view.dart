@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sizer/sizer.dart';
 
+import '../widgets/imageLoading.dart';
 import 'logic.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -28,9 +29,9 @@ class SettingsPage extends StatelessWidget {
                 .doc(auth.currentUser!.uid)
                 .snapshots(),
             builder: (context, snapshot) {
-              if(snapshot.hasData){
+              if (snapshot.hasData) {
                 return ListView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   children: [
                     const SizedBox(
                       height: 50,
@@ -59,12 +60,29 @@ class SettingsPage extends StatelessWidget {
                             const SizedBox(
                               width: 10,
                             ),
-                            ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                  snapshot.data!.get('pfp'),
-                                  width: 70,
-                                )),
+                            Stack(
+                              children: [
+                                ClipOval(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      logic.pickImageAndUpload(context);
+                                    },
+                                    child: MyImageWidget(
+                                      imageUrl: snapshot.data!.get('pfp'),
+                                      width: 70,
+                                      hieght: 70,
+                                    ),
+                                  ),
+                                ),
+                                const Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: Icon(
+                                      Iconsax.edit,
+                                      color: Colors.grey,
+                                    )),
+                              ],
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
@@ -95,7 +113,6 @@ class SettingsPage extends StatelessWidget {
                           vertical: 10, horizontal: 20),
                       child: Container(
                         width: MediaQuery.sizeOf(context).width * 0.8,
-                        height: 210,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20)),
@@ -108,9 +125,11 @@ class SettingsPage extends StatelessWidget {
                               child: ListTile(
                                 leading: const Icon(Icons.edit),
                                 title: const Text('Change Name'),
-                                trailing: const Icon(Icons.keyboard_arrow_right),
+                                trailing:
+                                    const Icon(Icons.keyboard_arrow_right),
                                 onTap: () {
-                                  Get.to(()=>ChangeNamePage(),transition: Transition.rightToLeft);
+                                  Get.to(() => ChangeNamePage(),
+                                      transition: Transition.rightToLeft);
                                 },
                               ),
                             ),
@@ -144,6 +163,36 @@ class SettingsPage extends StatelessWidget {
                                 onTap: () {},
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 5),
+                              child: ListTile(
+                                leading: const Icon(Iconsax.security),
+                                title: const Text('Public Account'),
+                                trailing: Switch(
+                                  value: snapshot.data!.get('isPublic'),
+                                  onChanged: (value) {
+                                    logic.changePublic(value, context);
+                                  },
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 5,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  logic.resetPassword(email: auth.currentUser!.email.toString(), context: context);
+                                },
+                                child: const ListTile(
+                                  leading: Icon(Iconsax.lock),
+                                  title: Text('Reset Password'),
+
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -152,7 +201,6 @@ class SettingsPage extends StatelessWidget {
                       padding: const EdgeInsets.all(25.0),
                       child: Container(
                         width: MediaQuery.sizeOf(context).width * 0.8,
-                        height: 70,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20)),
@@ -169,6 +217,7 @@ class SettingsPage extends StatelessWidget {
                               style: TextStyle(color: Colors.red),
                             ),
                             onTap: () {
+                              logic.changeOnline(false);
                               logic.Logout();
                             },
                           ),
@@ -180,11 +229,9 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ],
                 );
+              } else {
+                return const Loading();
               }
-              else{
-                return Loading();
-              }
-
             },
           ),
         );
