@@ -40,7 +40,7 @@ class ScanedProfileLogic extends GetxController {
     if (requestedDoc.exists) {
       followStatus = 'Requested';
       btnPressable = true;
-      followStatus='Requested';
+      followStatus = 'Requested';
 
       update();
       update();
@@ -100,9 +100,9 @@ class ScanedProfileLogic extends GetxController {
     try {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(documentId)
-          .collection('requests')
           .doc(auth.currentUser!.uid)
+          .collection('requests')
+          .doc(documentId)
           .delete();
 
       print('Document deleted successfully');
@@ -126,7 +126,6 @@ class ScanedProfileLogic extends GetxController {
         .collection("users")
         .doc(currentUser.uid)
         .get();
-
 
     await FirebaseFirestore.instance
         .collection("users")
@@ -157,10 +156,8 @@ class ScanedProfileLogic extends GetxController {
         return;
       }
 
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(id)
-          .get();
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection("users").doc(id).get();
 
       bool isPublic = userSnapshot.get('isPublic');
 
@@ -185,8 +182,7 @@ class ScanedProfileLogic extends GetxController {
         followStatus = 'Following';
         update();
         print("Successfully followed!");
-      }
-      else {
+      } else {
         await FirebaseFirestore.instance
             .collection("users")
             .doc(id)

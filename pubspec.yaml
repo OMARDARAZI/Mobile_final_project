@@ -57,6 +57,7 @@ dependencies:
   simple_logger: ^1.9.0+3
   image_picker:
   bcrypt:
+  package_info_plus:
 
 dev_dependencies:
   flutter_test:

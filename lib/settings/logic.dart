@@ -9,11 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsLogic extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
-
+  String appVersion = '';
   final picker = ImagePicker();
   File? _image;
   String? _imageUrl;
@@ -30,6 +31,14 @@ class SettingsLogic extends GetxController {
     var data = {'isOnline': value};
     await firestore.collection('users').doc(auth.currentUser!.uid).update(data);
     update();
+  }
+
+
+  Future<void> getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+      appVersion = packageInfo.version;
+      update();
   }
 
   changePublic(value, context) async {
@@ -79,6 +88,8 @@ class SettingsLogic extends GetxController {
     await auth.signOut();
     Get.offAll(() => LoginPage(), transition: Transition.downToUp);
   }
+
+
 
   Future<void> pickImageAndUpload(BuildContext context) async {
     // Show a loading dialog

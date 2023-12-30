@@ -20,6 +20,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<SettingsLogic>(
       init: SettingsLogic(),
+
       builder: (logic) {
         return Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
@@ -224,6 +225,14 @@ class SettingsPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('App Version: 1.0.0',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),
+                      ],
+                    ),
+
                     SizedBox(
                       height: 30.h,
                     ),

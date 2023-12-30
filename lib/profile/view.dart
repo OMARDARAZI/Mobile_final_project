@@ -130,7 +130,7 @@ class ProfilePage extends StatelessWidget {
                     child: FlipCard(
                       rotateSide: RotateSide.left,
                       backWidget: Container(
-                        width: 48.w,
+                        width: 50.w,
                         height: 30.h,
                         decoration: BoxDecoration(
                             color: const Color(0xff7F4CA6),
