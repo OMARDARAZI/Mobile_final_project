@@ -84,6 +84,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                     ),
                     backgroundColor: Theme.of(context).backgroundColor,
                     body: ListView(
+
                       physics: const RangeMaintainingScrollPhysics(),
                       children: [
                         Column(
@@ -121,13 +122,44 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                               return ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Container(
-                                                  width: 30.w,
-                                                  height: 30.w,
-                                                  child: MyImageWidget(
-                                                    width: 2,
-                                                    hieght: 2,
-                                                    imageUrl: data['pfp'],
+                                                child: GestureDetector(
+                                                  onLongPress: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return Center(
+                                                          child: Container(
+                                                            width: 250,
+                                                            height: 250,
+                                                            decoration: BoxDecoration(
+                                                              color: Colors.white,
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  500),
+                                                            ),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  500),
+                                                              child: MyImageWidget(
+                                                                imageUrl: data['pfp'],
+                                                                width: 0,
+                                                                hieght: 0,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 30.w,
+                                                    height: 30.w,
+                                                    child: MyImageWidget(
+                                                      width: 2,
+                                                      hieght: 2,
+                                                      imageUrl: data['pfp'],
+                                                    ),
                                                   ),
                                                 ),
                                               );
@@ -356,7 +388,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                       stream: firestore
                                           .collection('users')
                                           .doc(widget.id)
-                                          .collection('following')
+                                          .collection('Following')
                                           .snapshots(),
                                       builder: (context, snapshot) {
                                         if (snapshot.hasData) {
@@ -573,51 +605,57 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                             if (Accountsnapshot
                                                     .data!.docs.length >
                                                 0) {
-                                              return GridView.builder(
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemCount: Accountsnapshot
-                                                    .data!.docs.length,
-                                                gridDelegate:
-                                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 2,
-                                                ),
-                                                itemBuilder: (context, index) {
-                                                  return ItemCard(
-                                                    onTap: () async {
-                                                      String externalLink =
-                                                          Accountsnapshot
-                                                              .data!.docs[index]
-                                                              .get('link');
-                                                      try {
-                                                        await launchUrl(
-                                                            Uri.parse(
-                                                                externalLink));
-                                                      } catch (e) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            showCloseIcon: true,
-                                                            closeIconColor:
-                                                                Colors.white,
-                                                            content: Text(
-                                                                'Error launching URL'),
-                                                            duration: Duration(
-                                                                seconds: 3),
-                                                          ),
-                                                        );
-                                                      }
+                                              return Column(
+                                                children: [
+                                                  GridView.builder(
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemCount: Accountsnapshot
+                                                        .data!.docs.length,
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                    ),
+                                                    itemBuilder: (context, index) {
+                                                      return ItemCard(
+                                                        onTap: () async {
+                                                          String externalLink =
+                                                              Accountsnapshot
+                                                                  .data!.docs[index]
+                                                                  .get('link');
+                                                          try {
+                                                            await launchUrl(
+                                                                Uri.parse(
+                                                                    externalLink));
+                                                          } catch (e) {
+                                                            ScaffoldMessenger.of(
+                                                                    context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                showCloseIcon: true,
+                                                                closeIconColor:
+                                                                    Colors.white,
+                                                                content: Text(
+                                                                    'Error launching URL'),
+                                                                duration: Duration(
+                                                                    seconds: 3),
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                        name: Accountsnapshot
+                                                            .data!.docs[index]
+                                                            .get('name'),
+                                                        image: Accountsnapshot
+                                                            .data!.docs[index]
+                                                            .get('image'),
+                                                      );
                                                     },
-                                                    name: Accountsnapshot
-                                                        .data!.docs[index]
-                                                        .get('name'),
-                                                    image: Accountsnapshot
-                                                        .data!.docs[index]
-                                                        .get('image'),
-                                                  );
-                                                },
+                                                  ),
+                                                  Accountsnapshot
+                                                      .data!.docs.length < 2?  Container(height: 200,):Container()
+                                                ],
                                               );
                                             } else {
                                               return Container(
@@ -668,7 +706,7 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                   );
                                 })
                           ],
-                        )
+                        ),
                       ],
                     ),
                   );

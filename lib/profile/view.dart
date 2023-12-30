@@ -7,6 +7,7 @@ import 'package:finale_proj/add_account/view.dart';
 import 'package:finale_proj/edit_bio/view.dart';
 import 'package:finale_proj/requests/view.dart';
 import 'package:finale_proj/settings/view.dart';
+import 'package:finale_proj/show_followers_following/view.dart';
 import 'package:finale_proj/widgets/imageLoading.dart';
 import 'package:finale_proj/widgets/itemCard.dart';
 import 'package:finale_proj/widgets/loading.dart';
@@ -147,18 +148,48 @@ class ProfilePage extends StatelessWidget {
                                   .snapshots(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  var data = snapshot.data!
-                                      .data();
+                                  var data = snapshot.data!.data();
                                   if (data != null && data.containsKey('pfp')) {
                                     return ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: Container(
                                         width: 30.w,
                                         height: 30.w,
-                                        child: MyImageWidget(
-                                          width: 2,
-                                          hieght: 2,
-                                          imageUrl: data['pfp'],
+                                        child: GestureDetector(
+                                          onLongPress: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Center(
+                                                  child: Container(
+                                                    width: 250,
+                                                    height: 250,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              500),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              500),
+                                                      child: MyImageWidget(
+                                                        imageUrl: data['pfp'],
+                                                        width: 0,
+                                                        hieght: 0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: MyImageWidget(
+                                            width: 2,
+                                            hieght: 2,
+                                            imageUrl: data['pfp'],
+                                          ),
                                         ),
                                       ),
                                     );
@@ -340,7 +371,12 @@ class ProfilePage extends StatelessWidget {
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.to(
+                                        () => ShowFollowersFollowingPage(
+                                            coll: 'Followers'),
+                                        transition: Transition.rightToLeft);
+                                  },
                                   child: Column(
                                     children: [
                                       Text(
@@ -393,24 +429,32 @@ class ProfilePage extends StatelessWidget {
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                return Column(
-                                  children: [
-                                    Text(
-                                      '${snapshot.data!.docs.length}',
-                                      style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(
-                                      height: 7,
-                                    ),
-                                    Text(
-                                      'Following',
-                                      style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                        () => ShowFollowersFollowingPage(
+                                            coll: 'Following'),
+                                        transition: Transition.rightToLeft);
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '${snapshot.data!.docs.length}',
+                                        style: TextStyle(
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 7,
+                                      ),
+                                      Text(
+                                        'Following',
+                                        style: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
                                 );
                               } else {
                                 return Column(
@@ -677,8 +721,10 @@ class ProfilePage extends StatelessWidget {
                                   SizedBox(
                                     height: 50,
                                   ),
-                                  Text('No Accounts Found!',style: TextStyle(fontSize: 20.sp),),
-
+                                  Text(
+                                    'No Accounts Found!',
+                                    style: TextStyle(fontSize: 20.sp),
+                                  ),
                                   Opacity(
                                     opacity: .5,
                                     child:

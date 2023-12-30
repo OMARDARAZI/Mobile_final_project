@@ -47,6 +47,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver  {
     print('App Lifecycle State: $state');
 
     if (state == AppLifecycleState.resumed) {
+      updateIsOnlineStatus(true);
+
       print('App resumed');
     } else if (state == AppLifecycleState.paused) {
       updateIsOnlineStatus(false);

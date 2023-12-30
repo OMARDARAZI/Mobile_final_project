@@ -15,7 +15,7 @@ class ScanedProfileLogic extends GetxController {
   }
 
   Future<String> checkFollowStatus(String userId) async {
-    // Check if userId is in "Following" collection
+     // Check if userId is in "Following" collection
     var followingDoc = await firestore
         .collection('users')
         .doc(auth.currentUser!.uid)

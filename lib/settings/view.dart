@@ -20,7 +20,6 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<SettingsLogic>(
       init: SettingsLogic(),
-
       builder: (logic) {
         return Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
@@ -65,6 +64,35 @@ class SettingsPage extends StatelessWidget {
                               children: [
                                 ClipOval(
                                   child: GestureDetector(
+                                    onLongPress: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Center(
+                                            child: Container(
+                                              width: 250,
+                                              height: 250,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    500),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    500),
+                                                child: MyImageWidget(
+                                                  imageUrl: snapshot.data!.get('pfp'),
+                                                  width: 0,
+                                                  hieght: 0,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
                                     onTap: () {
                                       logic.pickImageAndUpload(context);
                                     },
@@ -76,12 +104,13 @@ class SettingsPage extends StatelessWidget {
                                   ),
                                 ),
                                 const Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: Icon(
-                                      Iconsax.edit,
-                                      color: Colors.grey,
-                                    )),
+                                  top: 0,
+                                  right: 0,
+                                  child: Icon(
+                                    Iconsax.edit,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(
@@ -149,21 +178,7 @@ class SettingsPage extends StatelessWidget {
                                 onTap: () {},
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 5),
-                              child: ListTile(
-                                leading: const Icon(Iconsax.user_octagon),
-                                title: const Text('Appear Online'),
-                                trailing: Switch(
-                                  value: snapshot.data!.get('isOnline'),
-                                  onChanged: (value) {
-                                    logic.changeOnline(value);
-                                  },
-                                ),
-                                onTap: () {},
-                              ),
-                            ),
+
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 5),
@@ -185,12 +200,13 @@ class SettingsPage extends StatelessWidget {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  logic.resetPassword(email: auth.currentUser!.email.toString(), context: context);
+                                  logic.resetPassword(
+                                      email: auth.currentUser!.email.toString(),
+                                      context: context);
                                 },
                                 child: const ListTile(
                                   leading: Icon(Iconsax.lock),
                                   title: Text('Reset Password'),
-
                                 ),
                               ),
                             ),
@@ -225,14 +241,19 @@ class SettingsPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('App Version: 1.0.0',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),
+                        Text(
+                          'App Version: 1.0.0',
+                          style: TextStyle(
+                              color: Colors.grey, fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
-
                     SizedBox(
                       height: 30.h,
                     ),
