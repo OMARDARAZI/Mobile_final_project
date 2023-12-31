@@ -9,6 +9,7 @@ import 'package:flutter_flip_card/modal/flip_side.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:simple_logger/simple_logger.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -84,7 +85,6 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                     ),
                     backgroundColor: Theme.of(context).backgroundColor,
                     body: ListView(
-
                       physics: const RangeMaintainingScrollPhysics(),
                       children: [
                         Column(
@@ -126,23 +126,30 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                   onLongPress: () {
                                                     showDialog(
                                                       context: context,
-                                                      builder: (BuildContext context) {
+                                                      builder: (BuildContext
+                                                          context) {
                                                         return Center(
                                                           child: Container(
                                                             width: 250,
                                                             height: 250,
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.white,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
                                                               borderRadius:
-                                                              BorderRadius.circular(
-                                                                  500),
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          500),
                                                             ),
                                                             child: ClipRRect(
                                                               borderRadius:
-                                                              BorderRadius.circular(
-                                                                  500),
-                                                              child: MyImageWidget(
-                                                                imageUrl: data['pfp'],
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          500),
+                                                              child:
+                                                                  MyImageWidget(
+                                                                imageUrl:
+                                                                    data['pfp'],
                                                                 width: 0,
                                                                 hieght: 0,
                                                               ),
@@ -557,11 +564,12 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                           .collection('accounts')
                                           .snapshots(),
                                       builder: (context, Accountsnapshot) {
+
                                         if (Accountsnapshot.hasData) {
+
                                           if (snapshot.data!.get('isPublic') ==
                                                   false &&
-                                              !Fsnapshot.data!.docs.contains(
-                                                  auth.currentUser!.uid)) {
+                                              !Fsnapshot.data!.docs.contains(auth.currentUser!.uid)) {
                                             return Container(
                                               width: MediaQuery.sizeOf(context)
                                                   .width,
@@ -579,14 +587,17 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                     height: 50,
                                                   ),
                                                   Image.asset(
-                                                      'assets/images/lock.png',width: 250,),
+                                                    'assets/images/lock.png',
+                                                    width: 250,
+                                                  ),
                                                   const SizedBox(
                                                     height: 20,
                                                   ),
                                                   Text(
                                                     'Private Account',
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         fontSize: 20.sp),
                                                   ),
                                                   const SizedBox(
@@ -617,29 +628,35 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                         const SliverGridDelegateWithFixedCrossAxisCount(
                                                       crossAxisCount: 2,
                                                     ),
-                                                    itemBuilder: (context, index) {
+                                                    itemBuilder:
+                                                        (context, index) {
                                                       return ItemCard(
                                                         onTap: () async {
                                                           String externalLink =
                                                               Accountsnapshot
-                                                                  .data!.docs[index]
+                                                                  .data!
+                                                                  .docs[index]
                                                                   .get('link');
                                                           try {
                                                             await launchUrl(
                                                                 Uri.parse(
                                                                     externalLink));
                                                           } catch (e) {
-                                                            ScaffoldMessenger.of(
-                                                                    context)
+                                                            ScaffoldMessenger
+                                                                    .of(context)
                                                                 .showSnackBar(
                                                               const SnackBar(
-                                                                showCloseIcon: true,
+                                                                showCloseIcon:
+                                                                    true,
                                                                 closeIconColor:
-                                                                    Colors.white,
+                                                                    Colors
+                                                                        .white,
                                                                 content: Text(
                                                                     'Error launching URL'),
-                                                                duration: Duration(
-                                                                    seconds: 3),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            3),
                                                               ),
                                                             );
                                                           }
@@ -653,8 +670,13 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                       );
                                                     },
                                                   ),
-                                                  Accountsnapshot
-                                                      .data!.docs.length < 2?  Container(height: 200,):Container()
+                                                  Accountsnapshot.data!.docs
+                                                              .length <=
+                                                          2
+                                                      ? Container(
+                                                          height: 200,
+                                                        )
+                                                      : Container()
                                                 ],
                                               );
                                             } else {
@@ -664,14 +686,16 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
                                                         .width,
                                                 height: 70.h,
                                                 decoration: const BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft: Radius
-                                                                .circular(50),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    50))),
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(50),
+                                                    topRight: Radius.circular(
+                                                      50,
+                                                    ),
+                                                  ),
+                                                ),
                                                 child: Column(
                                                   children: [
                                                     const SizedBox(

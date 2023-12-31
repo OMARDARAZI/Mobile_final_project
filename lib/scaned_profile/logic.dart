@@ -100,9 +100,9 @@ class ScanedProfileLogic extends GetxController {
     try {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(auth.currentUser!.uid)
-          .collection('requests')
           .doc(documentId)
+          .collection('requests')
+          .doc(auth.currentUser!.uid)
           .delete();
 
       print('Document deleted successfully');
@@ -115,6 +115,8 @@ class ScanedProfileLogic extends GetxController {
       // Handle the error as needed
     }
   }
+
+
 
   acceptRequest(String id) async {
     User? currentUser = FirebaseAuth.instance.currentUser;

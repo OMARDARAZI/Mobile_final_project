@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Users {
   String name;
@@ -23,6 +24,7 @@ class Users {
       'isOnline': true,
       'suggestAccount': true,
       'lastNameChangeTimestamp': FieldValue.serverTimestamp(),
+      'Id':FirebaseAuth.instance.currentUser!.uid,
     };
   }
 }

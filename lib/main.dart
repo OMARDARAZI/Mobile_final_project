@@ -32,12 +32,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver  {
   void initState() {
     super.initState();
     updateIsOnlineStatus(true);
-    WidgetsBinding.instance!.addObserver(this as WidgetsBindingObserver);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this as WidgetsBindingObserver);
+    WidgetsBinding.instance!.removeObserver(this);
     updateIsOnlineStatus(false);
     super.dispose();
   }
@@ -48,15 +48,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver  {
 
     if (state == AppLifecycleState.resumed) {
       updateIsOnlineStatus(true);
-
       print('App resumed');
     } else if (state == AppLifecycleState.paused) {
       updateIsOnlineStatus(false);
 
       print('App paused');
     } else if (state == AppLifecycleState.inactive) {
+      updateIsOnlineStatus(false);
       print('App inactive');
     } else if (state == AppLifecycleState.detached) {
+      updateIsOnlineStatus(false);
+
       print('App detached');
     }
   }
