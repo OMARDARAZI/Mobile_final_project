@@ -101,7 +101,7 @@ class ScanedProfileLogic extends GetxController {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(documentId)
-          .collection('requests')
+          .collection('requests')..
           .doc(auth.currentUser!.uid)
           .delete();
 
