@@ -567,51 +567,55 @@ class _ScanedProfilePageState extends State<ScanedProfilePage> {
 
                                         if (Accountsnapshot.hasData) {
 
-                                          if (snapshot.data!.get('isPublic') ==
-                                                  false &&
-                                              !Fsnapshot.data!.docs.contains(auth.currentUser!.uid)) {
-                                            return Container(
-                                              width: MediaQuery.sizeOf(context)
-                                                  .width,
-                                              height: 70.h,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(50),
-                                                  topRight: Radius.circular(50),
+                                          if (snapshot.data!.get('isPublic') == false) {
+                                            if(!Fsnapshot.data!.docs.contains(auth.currentUser!.uid)==true){
+                                              return Container(
+                                                width: MediaQuery.sizeOf(context)
+                                                    .width,
+                                                height: 70.h,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(50),
+                                                    topRight: Radius.circular(50),
+                                                  ),
                                                 ),
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  const SizedBox(
-                                                    height: 50,
-                                                  ),
-                                                  Image.asset(
-                                                    'assets/images/lock.png',
-                                                    width: 250,
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 20,
-                                                  ),
-                                                  Text(
-                                                    'Private Account',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20.sp),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    'Follow to see his accounts.',
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 15.sp),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
+                                                child: Column(
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 50,
+                                                    ),
+                                                    Image.asset(
+                                                      'assets/images/lock.png',
+                                                      width: 250,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Text(
+                                                      'Private Account',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: 20.sp),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      'Follow to see his accounts.',
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 15.sp),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }
+                                            else{
+                                              return Container();
+                                            }
+
                                           } else {
                                             if (Accountsnapshot
                                                     .data!.docs.length >
